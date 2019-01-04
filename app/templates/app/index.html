@@ -1,0 +1,118 @@
+{% extends 'base_template.html' %}
+
+
+{%block title%}
+<title>Django Chat Server</title>
+{%endblock%}
+
+{%block style%}
+
+<style>
+    .panel{
+	    margin:10%;
+	    margin-top: 5%;
+    }
+
+    .panel-footer{
+	    background: linear-gradient(to bottom, #0099ff 0%, #ccff99 100%);
+    }
+
+    #name, #msg{
+	    background: linear-gradient(to bottom, #66ccff 0%, #ffffff 100%);border:2px solid #99ffcc;
+    }
+
+
+
+</style>
+
+{%endblock%}
+
+{%block javascript%}
+
+<script>
+
+
+	function refresh() {
+
+    		$.ajax({
+        		url: "{% url 'chatapp:refresher' %}",
+        		success: function(data) {
+            		$('#content').html(data);
+        		}
+    		});
+
+    		setTimeout(refresh, 100);
+	}
+
+$(function(){
+    refresh();
+});
+
+
+
+    $(document).on('submit','#chatform',function(event){
+
+          event.preventDefault();
+
+          $.ajax({
+
+                    method:"POST",
+                    url:"{%url 'chatapp:chatSubmit'%}",
+                    data: {
+                        name : $('#name').val(),
+                        msg : $('#msg').val(),
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                    },
+
+                    success: function(data){
+                    },
+            });
+    });
+
+</script>
+
+{%endblock%}
+
+{%block content%}
+
+
+<div class="container">
+
+	<div class="panel panel-primary">
+
+		<div class="panel-heading">
+			<h3 class="panel-title">Django Chat Server</h3>
+		</div>
+		<div id="content" style="background:pink">
+			{%include 'app/chatrefresher.html'%}
+		</div>
+
+
+		<div class="panel-footer">
+
+			<form method="post" id="chatform">
+
+				{%csrf_token%}
+    			<div class="form-group">
+      				<label for="email">Username</label>
+      				<input type="text" class="form-control" id="name" placeholder="Enter Username "  >
+    			</div>
+
+    			<div class="form-group">
+      				<label for="pwd">Message</label>
+      				<input type="text" class="form-control" id="msg" placeholder="Enter text message">
+    			</div>
+
+    			<input type="submit" class="btn btn-success" value="Submit">
+
+  			</form>
+
+		</div>
+
+
+	</div>
+
+
+</div>
+
+{%endblock%}

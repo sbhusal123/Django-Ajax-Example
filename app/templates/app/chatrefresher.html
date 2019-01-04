@@ -1,0 +1,9 @@
+{% for m in message %}
+
+		<div class="panel-body" style="margin-top:-10px;margin-bottom:-20px">
+			<div class="alert alert-warning" style="font-size:15px">
+				<strong><i>{{ m.user }} </i></strong>:<span style="color:red"><b> {{ m.message }} </b></span>
+			</div>
+		</div>
+
+{%endfor%}
